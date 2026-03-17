@@ -20,8 +20,9 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDTO> findAll() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(Product::toDTO).toList();
     }
 
     public ProductDTO findById(String id) {
