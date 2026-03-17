@@ -4,19 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import warehouse.core.document.Product;
 import warehouse.core.dto.ProductDTO;
 import warehouse.core.service.ProductService;
 
 import java.util.List;
 
 @RestController("/api/products")
-public class ProductRestController {
+public class ProductController {
 
     private final ProductService productService;
 
     @Autowired
-    public ProductRestController(ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -26,7 +25,7 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProduct() {
+    public ResponseEntity<List<ProductDTO>> getProduct() {
         return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
