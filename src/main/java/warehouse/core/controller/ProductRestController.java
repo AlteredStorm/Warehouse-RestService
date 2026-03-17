@@ -15,7 +15,7 @@ import java.util.List;
 @RestController("/api/products")
 public class ProductRestController {
 
-    ProductService productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductRestController(ProductService productService) {
