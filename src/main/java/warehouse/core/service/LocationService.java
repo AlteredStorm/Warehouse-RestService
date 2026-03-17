@@ -2,6 +2,7 @@ package warehouse.core.service;
 
 import org.springframework.stereotype.Service;
 import warehouse.core.document.Location;
+import warehouse.core.dto.LocationDTO;
 import warehouse.core.repository.LocationRepository;
 
 import java.util.List;
@@ -19,12 +20,18 @@ public class LocationService {
         locationRepository.save(location);
     }
 
-    public List<Location> findAll() {
-        return locationRepository.findAll();
+    public List<LocationDTO> findAll() {
+        List<Location> locations = locationRepository.findAll();
+        return locations.stream().map(Location::toDTO).toList();
     }
 
-    public Location findById(String id) {
-        return locationRepository.findById(id).orElse(null);
+    public LocationDTO findById(String id) {
+        Location location = locationRepository.findById(id).orElse(null);
+        if (location == null) {
+            return null;
+        } else {
+            return location.toDTO();
+        }
     }
 
 }
