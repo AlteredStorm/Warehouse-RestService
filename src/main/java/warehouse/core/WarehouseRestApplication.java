@@ -1,4 +1,4 @@
-package warehouse.rest.service;
+package warehouse.core;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
