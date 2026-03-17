@@ -1,5 +1,6 @@
 package warehouse.core.document;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,6 +9,7 @@ import warehouse.core.dto.ProductDTO;
 @Document("Product")
 @Getter
 @Setter
+@AllArgsConstructor
 public class Product {
 
     String sku;

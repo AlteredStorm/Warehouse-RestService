@@ -21,8 +21,8 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public void postProduct(@RequestBody Product product) {
-        productService.save(product);
+    public void postProduct(@RequestBody ProductDTO productDTO) {
+        productService.save(productDTO.toProduct());
     }
 
     @GetMapping
