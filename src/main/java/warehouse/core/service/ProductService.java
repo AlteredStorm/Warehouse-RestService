@@ -2,6 +2,7 @@ package warehouse.core.service;
 
 import org.springframework.stereotype.Service;
 import warehouse.core.document.Product;
+import warehouse.core.dto.ProductDTO;
 import warehouse.core.repository.ProductRepository;
 
 import java.util.List;
@@ -23,7 +24,12 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product findById(String id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductDTO findById(String id) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return null;
+        } else {
+            return product.toDTO();
+        }
     }
 }

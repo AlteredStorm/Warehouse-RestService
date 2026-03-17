@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import warehouse.core.document.Product;
+import warehouse.core.dto.ProductDTO;
 import warehouse.core.service.ProductService;
 
 import java.util.List;
@@ -30,9 +31,9 @@ public class ProductRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
-        ResponseEntity<Product> responseEntity;
-        Product product = productService.findById(id);
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
+        ResponseEntity<ProductDTO> responseEntity;
+        ProductDTO product = productService.findById(id);
         if (product == null) {
             responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
