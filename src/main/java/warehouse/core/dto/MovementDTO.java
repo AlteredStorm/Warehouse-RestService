@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import warehouse.core.document.Movement;
-import warehouse.core.document.MovementTypes;
+import warehouse.core.document.type.MovementTypes;
 
 import java.time.Instant;
 

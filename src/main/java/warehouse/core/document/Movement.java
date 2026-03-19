@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import warehouse.core.document.type.MovementTypes;
 import warehouse.core.dto.MovementDTO;
 
 import java.time.Instant;
