@@ -1,4 +1,4 @@
-package warehouse.core.document.type;
+package warehouse.core.document.enums;
 
 public enum MovementTypes {
     INBOUND,
