@@ -20,6 +20,10 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    public void saveAll(List<Product> products) {
+        productRepository.saveAll(products);
+    }
+
     public List<ProductDTO> findAll() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(Product::toDTO).toList();
@@ -32,4 +36,5 @@ public class ProductService {
     public Product findById(String id) {
         return productRepository.findById(id).orElse(null);
     }
+
 }
