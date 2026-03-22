@@ -21,11 +21,10 @@ public class MovementDTO {
     String toLocationId;
     Enum<MovementTypes> movementType;
     String reason;
-    String comment;
     Instant timestamp;
 
     public Movement toMovement() {
         return new Movement(this.id, this.productId, this.quantity, this.unit, this.fromLocationId,
-                this.toLocationId, this.movementType, this.reason, this.comment, this.timestamp);
+                this.toLocationId, this.movementType, this.reason, this.timestamp);
     }
 }
