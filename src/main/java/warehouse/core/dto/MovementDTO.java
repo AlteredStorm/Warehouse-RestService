@@ -3,7 +3,6 @@ package warehouse.core.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import warehouse.core.document.Movement;
 import warehouse.core.document.enums.MovementTypes;
 
 import java.time.Instant;
@@ -22,9 +21,4 @@ public class MovementDTO {
     Enum<MovementTypes> movementType;
     String reason;
     Instant timestamp;
-
-    public Movement toMovement() {
-        return new Movement(this.id, this.productId, this.quantity, this.unit, this.fromLocationId,
-                this.toLocationId, this.movementType, this.reason, this.timestamp);
-    }
 }
