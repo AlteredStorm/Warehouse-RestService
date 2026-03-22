@@ -21,13 +21,12 @@ public class OrderDTO {
     @Setter
     @AllArgsConstructor
     public static class OrderItemDTO {
-        String productId;
         String productSku;
         Integer requestedQuantity;
         Integer pickedQuantity;
 
         public Order.OrderItem toOrderItem() {
-            return new Order.OrderItem(productId, productSku, requestedQuantity, pickedQuantity);
+            return new Order.OrderItem(productSku, requestedQuantity, pickedQuantity);
         }
     }
 
