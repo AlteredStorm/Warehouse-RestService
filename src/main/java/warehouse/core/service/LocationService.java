@@ -25,13 +25,8 @@ public class LocationService {
         return locations.stream().map(Location::toDTO).toList();
     }
 
-    public LocationDTO findById(String id) {
-        Location location = locationRepository.findById(id).orElse(null);
-        if (location == null) {
-            return null;
-        } else {
-            return location.toDTO();
-        }
+    public Location findById(String id) {
+        return locationRepository.findById(id).orElse(null);
     }
 
 }

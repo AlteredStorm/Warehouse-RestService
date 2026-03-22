@@ -32,7 +32,7 @@ public class LocationController {
     @GetMapping("/{id}")
     public ResponseEntity<LocationDTO> getLocationById(@PathVariable String id) {
         ResponseEntity<LocationDTO> responseEntity;
-        LocationDTO locationDTO = locationService.findById(id);
+        LocationDTO locationDTO = locationService.findById(id).toDTO();
         if (locationDTO == null) {
             responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
