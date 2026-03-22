@@ -3,6 +3,7 @@ package warehouse.core.document;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import warehouse.core.document.enums.LocationTypes;
 import warehouse.core.dto.LocationDTO;
@@ -13,14 +14,15 @@ import warehouse.core.dto.LocationDTO;
 @AllArgsConstructor
 public class Location {
 
+    @Id
     String id;
+
     String code;
     LocationTypes type;
-    boolean active;
     String description;
 
     public LocationDTO toDTO() {
-        return new LocationDTO(id, code, type, active, description);
+        return new LocationDTO(id, code, type, description);
     }
 
 }
