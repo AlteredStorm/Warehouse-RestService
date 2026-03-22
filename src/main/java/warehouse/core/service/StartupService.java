@@ -55,13 +55,13 @@ public class StartupService {
     private List<Location> createLocations() {
         List<Location> locations = new ArrayList<>();
         locations.add(new Location("loc_" + LocationTypes.INTERNAL + "_A", LocationTypes.INTERNAL + "_A",
-                LocationTypes.INTERNAL, true, "Internal Storage A"));
+                LocationTypes.INTERNAL, "Internal Storage A"));
         locations.add(new Location("loc_" + LocationTypes.INTERNAL + "_B", LocationTypes.INTERNAL + "_B",
-                LocationTypes.INTERNAL, true, "Internal Storage B"));
+                LocationTypes.INTERNAL, "Internal Storage B"));
         locations.add(new Location("loc_" + LocationTypes.INTERNAL + "_C", LocationTypes.INTERNAL + "_C",
-                LocationTypes.INTERNAL, true, "Internal Storage C"));
+                LocationTypes.INTERNAL, "Internal Storage C"));
         locations.add(new Location("loc_" + LocationTypes.RETURN + "_R", LocationTypes.RETURN + "_R",
-                LocationTypes.INTERNAL, true, "Storage for Return"));
+                LocationTypes.INTERNAL, "Storage for Return"));
 
         return locations;
     }
@@ -75,7 +75,7 @@ public class StartupService {
         for (Product product : products) {
             Location randomLocation = locationsWithoutReturn.get(ThreadLocalRandom.current().nextInt(locationsWithoutReturn.size()));
             int quantity = ThreadLocalRandom.current().nextInt(min, max + 1);
-            StockLevel stockLevel = new StockLevel(product.getSku(), randomLocation.getId(), quantity,"","");
+            StockLevel stockLevel = new StockLevel(product.getSku(), randomLocation.getId(), quantity);
             stockLevels.add(stockLevel);
         }
         return stockLevels;
