@@ -12,19 +12,15 @@ public class StockLevelDTO {
     String locationId;
     Integer quantity;
     Integer quantityDelta;
-    String referenceNo;
-    String comment;
 
-    public StockLevelDTO(String productId, String locationId, int quantity, String referenceNo, String comment) {
+    public StockLevelDTO(String productId, String locationId, int quantity) {
         this.productId = productId;
         this.locationId = locationId;
         this.quantity = quantity;
-        this.referenceNo = referenceNo;
-        this.comment = comment;
     }
 
     public StockLevel toStock() {
-        return new StockLevel(this.productId, this.locationId, this.quantity, this.referenceNo, this.comment);
+        return new StockLevel(this.productId, this.locationId, this.quantity);
     }
 
 }
