@@ -14,11 +14,10 @@ public class LocationDTO {
     String id;
     String code;
     LocationTypes type;
-    Boolean active;
     String description;
 
     public Location toLocation() {
-        return new Location(id, code, type, active, description);
+        return new Location(id, code, type, description);
     }
 
 }
