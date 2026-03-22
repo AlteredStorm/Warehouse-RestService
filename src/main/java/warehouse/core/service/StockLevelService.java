@@ -5,7 +5,9 @@ import warehouse.core.document.StockLevel;
 import warehouse.core.dto.StockLevelDTO;
 import warehouse.core.repository.StockLevelRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,6 +22,33 @@ public class StockLevelService {
     public List<StockLevelDTO> findAll() {
         List<StockLevel> stockLevelList = stockLevelRepository.findAll();
         return stockLevelList.stream().map(StockLevel::toDTO).toList();
+    }
+
+    public Map<String, List<StockLevel>> findAllByProductId(List<String> productIds) {
+        Map<String, List<StockLevel>> stockLevelMapByProduct = new HashMap<>();
+        List<StockLevel> stockLevels = stockLevelRepository.findAllById(productIds);
+        for (String productId : productIds) {
+            List<StockLevel> temp = stockLevels.stream()
+                    .filter(stockLevel -> stockLevel.getProductId().equals(productId)).toList();
+            stockLevelMapByProduct.put(productId, temp);
+        }
+        return stockLevelMapByProduct;
+    }
+
+    public Optional<StockLevel> findByProductIdAndLocationId(String productId, String locationId) {
+        return stockLevelRepository.findByProductIdAndLocationId(productId, locationId);
+    }
+
+    public void saveOrDelete(StockLevel stockLevel) {
+        if (stockLevel.getQuantity() == 0) {
+           stockLevelRepository.delete(stockLevel);
+        } else {
+            stockLevelRepository.save(stockLevel);
+        }
+    }
+
+    public void deleteAll(List<StockLevel> stockLevels) {
+        stockLevelRepository.deleteAll(stockLevels);
     }
 
     public void receipts(StockLevel stock) {
