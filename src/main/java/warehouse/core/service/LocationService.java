@@ -20,6 +20,10 @@ public class LocationService {
         locationRepository.save(location);
     }
 
+    public void saveAll(List<Location> locations) {
+        locationRepository.saveAll(locations);
+    }
+
     public List<LocationDTO> findAll() {
         List<Location> locations = locationRepository.findAll();
         return locations.stream().map(Location::toDTO).toList();
