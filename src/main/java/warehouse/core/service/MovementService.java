@@ -36,4 +36,12 @@ public class MovementService {
         }
     }
 
+    public void save(Movement movement) {
+        movementRepository.save(movement);
+    }
+
+    public void saveAll(List<Movement> movements) {
+        movementRepository.saveAll(movements);
+    }
+
 }
