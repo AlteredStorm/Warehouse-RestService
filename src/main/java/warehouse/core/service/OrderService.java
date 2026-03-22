@@ -158,20 +158,64 @@ public class OrderService {
         }
     }
 
-    public void cancel(String id) {
-        Order order = orderRepository.findById(id).orElse(null);
-        if (order != null) {
-            order.cancel();
-            //Ware wieder einlagern
-            //Stock anpassen
-            //Bewegung abbilden
-            orderRepository.save(order);
+    public OrderDTO cancel(String id) {
+        Optional<Order> order = orderRepository.findById(id);
+        List<Movement> movements = new ArrayList<>();
+        if (order.isPresent()) {
+            order.get().cancel();
+            List<Order.OrderItem> orderItems = order.get().getItems();
+            List<String> productIds = order.get().getItems().stream().map(Order.OrderItem::getProductId).toList();
+            Map<String, List<StockLevel>> stockLevelMapByProduct = stockLevelService.findAllByProductId(productIds);
+            for (Map.Entry<String, List<StockLevel>> entry : stockLevelMapByProduct.entrySet()) {
+                Optional<Order.OrderItem> orderItem = order.get().getItems().stream().filter(item -> item.getProductId().equals(entry.getKey())).findFirst();
+                if (orderItem.isPresent()) {
+                    List<StockLevel> stockLevels = entry.getValue();
+                    List<StockLevel> sortedStockLevels = stockLevels.stream()
+                            .sorted(Comparator.comparingInt(StockLevel::getQuantity).reversed())
+                            .toList();
+                    StockLevel stockLevel = sortedStockLevels.getFirst();
+                    stockLevel.setQuantity(stockLevel.getQuantity() + orderItem.get().getPickedQuantity());
+                    stockLevelService.saveOrDelete(stockLevel);
+                    Movement movement = new Movement("", orderItem.get().getProductSku(), orderItem.get().getPickedQuantity(), "",
+                            LocationTypes.STAGE.toString(), stockLevel.getLocationId(), MovementTypes.OUTBOUND, "Canceled", "Order Canceled", Instant.now());
+                    orderItem.get().setPickedQuantity(0);
+                    orderItems.add(orderItem.get());
+                    movements.add(movement);
+                }
+            }
+            order.get().setItems(orderItems);
+            movementService.saveAll(movements);
+            return orderRepository.save(order.get()).toDTO();
+        } else {
+            return null;
         }
     }
 
-    public void returnOrder(OrderDTO orderDTO) {
-        Order order = orderDTO.toOrder();
-        order.returned();
-        orderRepository.save(order);
+    public OrderDTO returnOrder(String id) {
+        Optional<Order> order = orderRepository.findById(id);
+        List<Movement> movements = new ArrayList<>();
+        if (order.isPresent()) {
+            List<String> productIds = order.get().getItems().stream().map(Order.OrderItem::getProductId).toList();
+            Map<String, List<StockLevel>> stockLevelMapByProduct = stockLevelService.findAllByProductId(productIds);
+            for (Map.Entry<String, List<StockLevel>> entry : stockLevelMapByProduct.entrySet()) {
+                Product product = productService.findById(entry.getKey());
+                Optional<Order.OrderItem> orderItem = order.get().getItems().stream().filter(item -> item.getProductId().equals(entry.getKey())).findFirst();
+                if (orderItem.isPresent()) {
+                    StockLevel stockLevel = new StockLevel(entry.getKey(), "loc_RETURN_" + order.get().getId(), orderItem.get().getPickedQuantity(), order.get().getId(), "Order returned");
+                    stockLevelService.saveOrDelete(stockLevel);
+                    Movement movement = new Movement("", product.getSku(), orderItem.get().getPickedQuantity(), product.getUnit(),
+                            LocationTypes.CUSTOMER.toString(), LocationTypes.RETURN.toString(), MovementTypes.INBOUND, "Returned", "Order returned", Instant.now());
+                    movements.add(movement);
+                }
+            }
+
+            order.get().returned();
+            movementService.saveAll(movements);
+            return orderRepository.save(order.get()).toDTO();
+        } else {
+            return null;
+        }
+
+
     }
 }
