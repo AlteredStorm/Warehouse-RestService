@@ -25,12 +25,11 @@ public class ProductService {
         return products.stream().map(Product::toDTO).toList();
     }
 
-    public ProductDTO findById(String id) {
-        Product product = productRepository.findById(id).orElse(null);
-        if (product == null) {
-            return null;
-        } else {
-            return product.toDTO();
-        }
+    public List<Product> findAllById(List<String> ids) {
+        return productRepository.findAllById(ids);
+    }
+
+    public Product findById(String id) {
+        return productRepository.findById(id).orElse(null);
     }
 }
