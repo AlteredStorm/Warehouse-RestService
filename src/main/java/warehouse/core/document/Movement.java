@@ -18,6 +18,7 @@ public class Movement {
 
     @Id
     String id;
+
     String productId;
     int quantity;
     String unit;
@@ -25,12 +26,11 @@ public class Movement {
     String toLocationId;
     Enum<MovementTypes> movementType;
     String reason;
-    String comment;
     Instant timestamp;
 
     public MovementDTO toDTO() {
         return new MovementDTO(this.id, this.productId, this.quantity, this.unit, this.fromLocationId,
-                this.toLocationId, this.movementType, this.reason, this.comment, this.timestamp);
+                this.toLocationId, this.movementType, this.reason, this.timestamp);
     }
 
 }
