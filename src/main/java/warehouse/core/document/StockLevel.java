@@ -3,10 +3,12 @@ package warehouse.core.document;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import warehouse.core.dto.StockLevelDTO;
 
 @Document("Stock")
+@CompoundIndex(def = "{'productId': 1, 'locationId': 1}", unique = true)
 @Getter
 @Setter
 @AllArgsConstructor

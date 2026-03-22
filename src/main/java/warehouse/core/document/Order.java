@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import warehouse.core.document.enums.OrderStatus;
 import warehouse.core.dto.OrderDTO;
@@ -20,6 +21,7 @@ public class Order {
         this.items = orderItems;
     }
 
+    @Id
     String id;
 
     @Setter(AccessLevel.NONE)
@@ -30,20 +32,18 @@ public class Order {
     @Setter
     @AllArgsConstructor
     public static class OrderItem {
-        String productId;
         String productSku;
         int requestedQuantity;
         int pickedQuantity;
 
         public OrderDTO.OrderItemDTO toDTO() {
-            return new OrderDTO.OrderItemDTO(this.productId, this.productSku, this.requestedQuantity, this.pickedQuantity);
+            return new OrderDTO.OrderItemDTO(this.productSku, this.requestedQuantity, this.pickedQuantity);
         }
     }
 
     public void created() {
         this.status = OrderStatus.CREATED;
     }
-
 
     public void startPicking() {
         this.status = OrderStatus.PICKING;

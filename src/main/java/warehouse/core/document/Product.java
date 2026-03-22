@@ -3,6 +3,7 @@ package warehouse.core.document;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import warehouse.core.dto.ProductDTO;
 
@@ -12,7 +13,9 @@ import warehouse.core.dto.ProductDTO;
 @AllArgsConstructor
 public class Product {
 
+    @Id
     String sku;
+
     String name;
     String category;
     String unit;
