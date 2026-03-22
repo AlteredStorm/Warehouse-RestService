@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import warehouse.core.document.Product;
 import warehouse.core.dto.ProductDTO;
 import warehouse.core.service.ProductService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController("/api/products")
 public class ProductController {
@@ -32,12 +34,9 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
         ResponseEntity<ProductDTO> responseEntity;
-        ProductDTO product = productService.findById(id).toDTO();
-        if (product == null) {
-            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            responseEntity = new ResponseEntity<>(product, HttpStatus.OK);
-        }
+        Optional<Product> product = productService.findById(id);
+        responseEntity = product.map(value -> new ResponseEntity<>(value.toDTO(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         return responseEntity;
     }
 

@@ -6,6 +6,7 @@ import warehouse.core.dto.ProductDTO;
 import warehouse.core.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -33,8 +34,8 @@ public class ProductService {
         return productRepository.findAllById(ids);
     }
 
-    public Product findById(String id) {
-        return productRepository.findById(id).orElse(null);
+    public Optional<Product> findById(String id) {
+        return productRepository.findById(id);
     }
 
 }
