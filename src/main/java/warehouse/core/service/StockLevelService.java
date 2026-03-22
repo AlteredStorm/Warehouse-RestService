@@ -47,6 +47,10 @@ public class StockLevelService {
         }
     }
 
+    public void saveAll(List<StockLevel> stockLevels) {
+        stockLevelRepository.saveAll(stockLevels);
+    }
+
     public void deleteAll(List<StockLevel> stockLevels) {
         stockLevelRepository.deleteAll(stockLevels);
     }
