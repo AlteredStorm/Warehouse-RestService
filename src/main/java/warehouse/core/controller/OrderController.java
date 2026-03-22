@@ -64,13 +64,28 @@ public class OrderController {
     }
 
     @PostMapping("/cancel/{id}")
-    public void returnOrder(@PathVariable String id) {
-        orderService.cancel(id);
+    public ResponseEntity<OrderDTO> postCancelOrder(@PathVariable String id) {
+        ResponseEntity<OrderDTO> responseEntity;
+        OrderDTO orderDTO =  orderService.cancel(id);
+        if (orderDTO == null) {
+            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            responseEntity = new ResponseEntity<>(orderDTO, HttpStatus.OK);
+        }
+        return responseEntity;
     }
 
-    @PostMapping("/return")
-    public void returnOrder(@RequestBody OrderDTO orderDTO) {
-        orderService.returnOrder(orderDTO);
+    @PostMapping("/return/{id}")
+    public ResponseEntity<OrderDTO> postReturnOrder(@PathVariable String id) {
+        ResponseEntity<OrderDTO> responseEntity;
+        OrderDTO orderDTO =  orderService.returnOrder(id);
+        if (orderDTO == null) {
+            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            responseEntity = new ResponseEntity<>(orderDTO, HttpStatus.OK);
+        }
+        return responseEntity;
+
     }
 
 }
