@@ -8,7 +8,8 @@ import warehouse.core.service.OrderService;
 
 import java.util.List;
 
-@RestController("/api/orders")
+@RestController
+@RequestMapping("/api/orders")
 public class OrderController {
 
     OrderService orderService;

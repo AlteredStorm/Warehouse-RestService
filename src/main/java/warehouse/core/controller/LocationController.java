@@ -9,7 +9,8 @@ import warehouse.core.service.LocationService;
 
 import java.util.List;
 
-@RestController("api/locations")
+@RestController
+@RequestMapping("api/locations")
 public class LocationController {
 
     private final LocationService locationService;

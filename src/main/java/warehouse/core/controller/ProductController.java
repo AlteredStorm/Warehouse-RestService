@@ -11,7 +11,8 @@ import warehouse.core.service.ProductService;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/api/products")
+@RestController
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
