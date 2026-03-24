@@ -36,11 +36,7 @@ public class LocationController {
     public ResponseEntity<LocationDTO> getLocationById(@PathVariable String id) {
         ResponseEntity<LocationDTO> responseEntity;
         Optional<Location> location = locationService.findById(id);
-        if (!location.isPresent()) {
-            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            responseEntity = new ResponseEntity<>(location.get().toDTO(), HttpStatus.OK);
-        }
+        responseEntity = location.map(value -> new ResponseEntity<>(value.toDTO(), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         return responseEntity;
     }
 }

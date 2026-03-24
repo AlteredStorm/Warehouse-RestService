@@ -13,6 +13,4 @@ public interface StockLevelRepository extends MongoRepository<StockLevel, String
     Optional<StockLevel> findByProductIdAndLocationId(String productId, String locationId);
 
     List<StockLevel> findAllByProductIdIn(List<String> productIds);
-
-    List<StockLevel> findAllByProductIdInAndLocationId(List<String> productIds, String locationId);
 }
