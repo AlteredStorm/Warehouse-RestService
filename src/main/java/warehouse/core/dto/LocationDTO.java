@@ -11,13 +11,12 @@ import warehouse.core.document.enums.LocationTypes;
 @AllArgsConstructor
 public class LocationDTO {
 
-    String id;
     String code;
     LocationTypes type;
     String description;
 
     public Location toLocation() {
-        return new Location(id, code, type, description);
+        return new Location(code, type, description);
     }
 
 }
