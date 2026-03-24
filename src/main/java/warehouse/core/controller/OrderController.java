@@ -23,7 +23,7 @@ public class OrderController {
         return new ResponseEntity<>(orderService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{Id}")
+    @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable String id) {
         ResponseEntity<OrderDTO> responseEntity;
         OrderDTO orderDTO = orderService.findById(id);
@@ -69,7 +69,7 @@ public class OrderController {
         ResponseEntity<OrderDTO> responseEntity;
         OrderDTO orderDTO =  orderService.cancel(id);
         if (orderDTO == null) {
-            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             responseEntity = new ResponseEntity<>(orderDTO, HttpStatus.OK);
         }
@@ -81,7 +81,7 @@ public class OrderController {
         ResponseEntity<OrderDTO> responseEntity;
         OrderDTO orderDTO =  orderService.returnOrder(id);
         if (orderDTO == null) {
-            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             responseEntity = new ResponseEntity<>(orderDTO, HttpStatus.OK);
         }
