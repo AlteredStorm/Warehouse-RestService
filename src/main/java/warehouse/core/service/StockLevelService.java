@@ -26,7 +26,7 @@ public class StockLevelService {
 
     public Map<String, List<StockLevel>> findAllByProductId(List<String> productIds) {
         Map<String, List<StockLevel>> stockLevelMapByProduct = new HashMap<>();
-        List<StockLevel> stockLevels = stockLevelRepository.findAllById(productIds);
+        List<StockLevel> stockLevels = stockLevelRepository.findAllByProductIds(productIds);
         for (String productId : productIds) {
             List<StockLevel> temp = stockLevels.stream()
                     .filter(stockLevel -> stockLevel.getProductId().equals(productId)).toList();
