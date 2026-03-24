@@ -6,6 +6,7 @@ import warehouse.core.dto.LocationDTO;
 import warehouse.core.repository.LocationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocationService {
@@ -24,13 +25,17 @@ public class LocationService {
         locationRepository.saveAll(locations);
     }
 
+    public void deleteById(String locationId) {
+        locationRepository.deleteById(locationId);
+    }
+
     public List<LocationDTO> findAll() {
         List<Location> locations = locationRepository.findAll();
         return locations.stream().map(Location::toDTO).toList();
     }
 
-    public Location findById(String id) {
-        return locationRepository.findById(id).orElse(null);
+    public Optional<Location> findById(String id) {
+        return locationRepository.findById(id);
     }
 
 }
