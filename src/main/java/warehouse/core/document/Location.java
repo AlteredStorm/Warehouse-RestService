@@ -14,15 +14,14 @@ import warehouse.core.dto.LocationDTO;
 @AllArgsConstructor
 public class Location {
 
-    @Id
-    String id;
 
+    @Id
     String code;
     LocationTypes type;
     String description;
 
     public LocationDTO toDTO() {
-        return new LocationDTO(id, code, type, description);
+        return new LocationDTO(code, type, description);
     }
 
 }
