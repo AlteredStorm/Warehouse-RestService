@@ -3,6 +3,7 @@ package warehouse.core.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import warehouse.core.document.StockLevel;
 import warehouse.core.dto.StockLevelDTO;
 import warehouse.core.service.StockLevelService;
 
@@ -24,8 +25,13 @@ public class StockLevelController {
     }
 
     @PostMapping("/receipts")
-    public void postStockReceipts(@RequestBody StockLevelDTO stockLevelDTO) {
-        stockLevelService.receipts(stockLevelDTO.toStock());
+    public ResponseEntity<StockLevelDTO> postStockReceipts(@RequestBody StockLevelDTO stockLevelDTO) {
+        StockLevel stockLevel = stockLevelService.receipts(stockLevelDTO.toStock());
+        if (stockLevel != null) {
+            return  new ResponseEntity<>(HttpStatus.OK);
+        } else  {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/adjustments")
