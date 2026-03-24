@@ -3,6 +3,7 @@ package warehouse.core.document;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import warehouse.core.dto.StockLevelDTO;
@@ -13,6 +14,15 @@ import warehouse.core.dto.StockLevelDTO;
 @Setter
 @AllArgsConstructor
 public class StockLevel {
+
+    public StockLevel(String productId, String locationId, int quantity) {
+        this.productId = productId;
+        this.locationId = locationId;
+        this.quantity = quantity;
+    }
+
+    @Id
+    String id;
 
     String productId;
     String locationId;
