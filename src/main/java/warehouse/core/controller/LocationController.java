@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import warehouse.core.document.Location;
 import warehouse.core.dto.LocationDTO;
 import warehouse.core.service.LocationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/locations")
@@ -33,11 +35,11 @@ public class LocationController {
     @GetMapping("/{id}")
     public ResponseEntity<LocationDTO> getLocationById(@PathVariable String id) {
         ResponseEntity<LocationDTO> responseEntity;
-        LocationDTO locationDTO = locationService.findById(id).toDTO();
-        if (locationDTO == null) {
+        Optional<Location> location = locationService.findById(id);
+        if (!location.isPresent()) {
             responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            responseEntity = new ResponseEntity<>(locationDTO, HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(location.get().toDTO(), HttpStatus.OK);
         }
         return responseEntity;
     }
