@@ -26,7 +26,7 @@ public class StockLevelService {
 
     public Map<String, List<StockLevel>> findAllByProductId(List<String> productIds) {
         Map<String, List<StockLevel>> stockLevelMapByProduct = new HashMap<>();
-        List<StockLevel> stockLevels = stockLevelRepository.findAllByProductIds(productIds);
+        List<StockLevel> stockLevels = stockLevelRepository.findAllByProductIdIn(productIds);
         for (String productId : productIds) {
             List<StockLevel> temp = stockLevels.stream()
                     .filter(stockLevel -> stockLevel.getProductId().equals(productId)).toList();
@@ -39,11 +39,13 @@ public class StockLevelService {
         return stockLevelRepository.findByProductIdAndLocationId(productId, locationId);
     }
 
-    public void saveOrDelete(StockLevel stockLevel) {
-        if (stockLevel.getQuantity() == 0) {
-           stockLevelRepository.delete(stockLevel);
-        } else {
-            stockLevelRepository.save(stockLevel);
+    public void saveOrDeleteAll(List<StockLevel> stockLevels) {
+        for (StockLevel stockLevel : stockLevels) {
+            if (stockLevel.getQuantity() <= 0) {
+                stockLevelRepository.delete(stockLevel);
+            } else {
+                stockLevelRepository.save(stockLevel);
+            }
         }
     }
 
@@ -55,15 +57,31 @@ public class StockLevelService {
         stockLevelRepository.deleteAll(stockLevels);
     }
 
-    public void receipts(StockLevel stock) {
-        stockLevelRepository.save(stock);
+    public StockLevel receipts(StockLevel stock) {
+        if (stock.getQuantity() <= 0) {
+            return null;
+        }
+
+        Optional<StockLevel> existingStock = stockLevelRepository.findByProductIdAndLocationId(
+                stock.getProductId(),
+                stock.getLocationId()
+        );
+
+        if (existingStock.isPresent()) {
+            StockLevel currentStock = existingStock.get();
+            currentStock.setQuantity(currentStock.getQuantity() + stock.getQuantity());
+            return stockLevelRepository.save(currentStock);
+        } else {
+            return stockLevelRepository.save(stock);
+        }
     }
 
     public boolean adjustments(StockLevelDTO stockLevelDTO) {
-        Optional<StockLevel> stockLevel = stockLevelRepository.findByProductIdAndLocationId(stockLevelDTO.getProductId(), stockLevelDTO.getLocationId());
+        Optional<StockLevel> stockLevel = stockLevelRepository.findByProductIdAndLocationId(stockLevelDTO.getProductId(),
+                stockLevelDTO.getLocationId());
 
-        if (stockLevel.isPresent()) {
-            stockLevel.get().setQuantity(stockLevel.get().getQuantity() + stockLevelDTO.getQuantity());
+        if (stockLevel.isPresent() && (stockLevel.get().getQuantity() + stockLevelDTO.getQuantityDelta()) >= 0) {
+            stockLevel.get().setQuantity(stockLevel.get().getQuantity() + stockLevelDTO.getQuantityDelta());
             stockLevelRepository.save(stockLevel.get());
             return true;
         } else {
