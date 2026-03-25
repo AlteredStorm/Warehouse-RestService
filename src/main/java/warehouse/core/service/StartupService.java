@@ -57,10 +57,10 @@ public class StartupService {
         List<Product> products = new ArrayList<>();
         products.add(new Product("APP-TSH-001", "T-Shirt", "Apparel", "pcs"));
         products.add(new Product("APP-TSH-002", "T-Shirt", "Apparel", "pcs"));
-        products.add(new Product("ELE-HEA-001", "Headphones", "Clothing", "pcs"));
-        products.add(new Product("ELE-MON-001", "Monitor", "Clothing", "pcs"));
-        products.add(new Product("APP-JEA-001", "Jeans", "Clothing", "pcs"));
-        products.add(new Product("FUR-TAB-001", "Table", "Clothing", "pcs"));
+        products.add(new Product("ELE-HEA-001", "Headphones", "Electrical", "pcs"));
+        products.add(new Product("ELE-MON-001", "Monitor", "Electrical", "pcs"));
+        products.add(new Product("APP-JEA-001", "Jeans", "Apparel", "pcs"));
+        products.add(new Product("FUR-TAB-001", "Table", "Furniture", "pcs"));
         return products;
     }
 
