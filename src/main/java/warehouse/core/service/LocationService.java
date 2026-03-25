@@ -1,5 +1,6 @@
 package warehouse.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import warehouse.core.document.Location;
 import warehouse.core.dto.LocationDTO;
@@ -13,6 +14,7 @@ public class LocationService {
 
     LocationRepository locationRepository;
 
+    @Autowired
     public LocationService(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
     }
@@ -27,6 +29,10 @@ public class LocationService {
 
     public void deleteById(String locationId) {
         locationRepository.deleteById(locationId);
+    }
+
+    public void deleteAll() {
+        locationRepository.deleteAll();
     }
 
     public List<LocationDTO> findAll() {

@@ -36,8 +36,8 @@ public class MovementService {
         }
     }
 
-    public void save(Movement movement) {
-        movementRepository.save(movement);
+    public void deleteAll() {
+        movementRepository.deleteAll();
     }
 
     public void saveAll(List<Movement> movements) {

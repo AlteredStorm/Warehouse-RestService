@@ -1,5 +1,6 @@
 package warehouse.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import warehouse.core.document.StockLevel;
 import warehouse.core.dto.StockLevelDTO;
@@ -15,6 +16,7 @@ public class StockLevelService {
 
     private final StockLevelRepository stockLevelRepository;
 
+    @Autowired
     public StockLevelService(StockLevelRepository stockRepository) {
         this.stockLevelRepository = stockRepository;
     }
@@ -55,6 +57,10 @@ public class StockLevelService {
 
     public void deleteAll(List<StockLevel> stockLevels) {
         stockLevelRepository.deleteAll(stockLevels);
+    }
+
+    public void deleteAll() {
+        stockLevelRepository.deleteAll();
     }
 
     public StockLevel receipts(StockLevel stock) {

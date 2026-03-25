@@ -1,5 +1,6 @@
 package warehouse.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import warehouse.core.document.*;
 import warehouse.core.document.enums.LocationTypes;
@@ -20,6 +21,7 @@ public class OrderService {
     MovementService movementService;
     LocationService locationService;
 
+    @Autowired
     public OrderService(OrderRepository orderRepository, ProductService productService,
                         StockLevelService stockLevelService,MovementService movementService,
                         LocationService locationService) {
@@ -48,6 +50,10 @@ public class OrderService {
         Order order = orderDTO.toOrder();
         order.created();
         orderRepository.save(order);
+    }
+
+    public void deleteAll() {
+        orderRepository.deleteAll();
     }
 
     public OrderDTO startPicking(String id) {

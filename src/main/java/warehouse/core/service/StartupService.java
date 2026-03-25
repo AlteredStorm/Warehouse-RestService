@@ -8,6 +8,9 @@ import warehouse.core.document.Location;
 import warehouse.core.document.Product;
 import warehouse.core.document.StockLevel;
 import warehouse.core.document.enums.LocationTypes;
+import warehouse.core.document.enums.OrderStatus;
+import warehouse.core.repository.OrderRepository;
+import warehouse.core.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +22,17 @@ public class StartupService {
     private final ProductService productService;
     private final StockLevelService stockLevelService;
     private final LocationService locationService;
+    private final OrderService orderService;
+    private final MovementService movementService;
 
     @Autowired
-    public StartupService(ProductService productService, StockLevelService stockLevelService, LocationService locationService) {
+    public StartupService(ProductService productService, StockLevelService stockLevelService,
+                          LocationService locationService, OrderService orderService, MovementService movementService) {
         this.productService = productService;
         this.stockLevelService = stockLevelService;
         this.locationService = locationService;
+        this.orderService = orderService;
+        this.movementService = movementService;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -32,6 +40,13 @@ public class StartupService {
         List<Product> products = createProducts();
         List<Location> locations = createLocations();
         List<StockLevel> stockLevels;
+
+        orderService.deleteAll();
+        movementService.deleteAll();
+        productService.deleteAll();
+        locationService.deleteAll();
+        stockLevelService.deleteAll();
+
 
         productService.saveAll(products);
         locationService.saveAll(locations);

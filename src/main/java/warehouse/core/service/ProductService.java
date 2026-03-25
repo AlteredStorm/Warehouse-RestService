@@ -1,5 +1,6 @@
 package warehouse.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import warehouse.core.document.Product;
 import warehouse.core.dto.ProductDTO;
@@ -13,6 +14,7 @@ public class ProductService {
 
     ProductRepository productRepository;
 
+    @Autowired
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -38,4 +40,7 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    public void deleteAll() {
+        productRepository.deleteAll();
+    }
 }

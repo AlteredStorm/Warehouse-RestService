@@ -14,9 +14,9 @@ import warehouse.core.dto.LocationDTO;
 @AllArgsConstructor
 public class Location {
 
-
     @Id
     String code;
+
     LocationTypes type;
     String description;
 
