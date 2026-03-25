@@ -8,9 +8,6 @@ import warehouse.core.document.Location;
 import warehouse.core.document.Product;
 import warehouse.core.document.StockLevel;
 import warehouse.core.document.enums.LocationTypes;
-import warehouse.core.document.enums.OrderStatus;
-import warehouse.core.repository.OrderRepository;
-import warehouse.core.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
