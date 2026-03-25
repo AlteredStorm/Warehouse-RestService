@@ -1,18 +1,21 @@
 package warehouse.core.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import warehouse.core.document.Movement;
 import warehouse.core.dto.MovementDTO;
 import warehouse.core.repository.MovementRepository;
 
 import java.util.List;
 
-@Component
+@Service
+@Slf4j
 public class MovementService {
 
     private final MovementRepository movementRepository;
@@ -23,6 +26,7 @@ public class MovementService {
     }
 
     public List<MovementDTO> findAll(Integer pageSize) {
+        log.info("Retrieving all movement information limited by page size: {}", pageSize);
         if (pageSize == null) {
             List<Movement> movements = movementRepository.findAll();
             return movements.stream().map(Movement::toDTO).toList();
@@ -37,10 +41,12 @@ public class MovementService {
     }
 
     public void deleteAll() {
+        log.info("Deleting all movements");
         movementRepository.deleteAll();
     }
 
     public void saveAll(List<Movement> movements) {
+        log.info("Saving all movement information");
         movementRepository.saveAll(movements);
     }
 

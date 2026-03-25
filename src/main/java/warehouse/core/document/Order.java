@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Order {
 
     public Order(String id, List<OrderItem> orderItems) {

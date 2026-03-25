@@ -1,9 +1,6 @@
 package warehouse.core.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import warehouse.core.document.Order;
 import warehouse.core.document.enums.OrderStatus;
 
@@ -13,6 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class OrderDTO {
 
     String id;

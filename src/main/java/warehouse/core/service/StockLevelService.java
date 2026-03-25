@@ -1,5 +1,6 @@
 package warehouse.core.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import warehouse.core.document.StockLevel;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class StockLevelService {
 
     private final StockLevelRepository stockLevelRepository;
@@ -22,11 +24,13 @@ public class StockLevelService {
     }
 
     public List<StockLevelDTO> findAll() {
+        log.info("Finding all stock levels");
         List<StockLevel> stockLevelList = stockLevelRepository.findAll();
         return stockLevelList.stream().map(StockLevel::toDTO).toList();
     }
 
     public Map<String, List<StockLevel>> findAllByProductId(List<String> productIds) {
+        log.info("Finding all stock levels by product id");
         Map<String, List<StockLevel>> stockLevelMapByProduct = new HashMap<>();
         List<StockLevel> stockLevels = stockLevelRepository.findAllByProductIdIn(productIds);
         for (String productId : productIds) {
@@ -38,10 +42,12 @@ public class StockLevelService {
     }
 
     public Optional<StockLevel> findByProductIdAndLocationId(String productId, String locationId) {
+        log.info("Finding stock levels by product and location id");
         return stockLevelRepository.findByProductIdAndLocationId(productId, locationId);
     }
 
     public void saveOrDeleteAll(List<StockLevel> stockLevels) {
+        log.info("Saving stock levels and deleting stock levels if quantity is zero or lower");
         for (StockLevel stockLevel : stockLevels) {
             if (stockLevel.getQuantity() <= 0) {
                 stockLevelRepository.delete(stockLevel);
@@ -52,18 +58,22 @@ public class StockLevelService {
     }
 
     public void saveAll(List<StockLevel> stockLevels) {
+        log.info("Saving stock levels {}", stockLevels);
         stockLevelRepository.saveAll(stockLevels);
     }
 
     public void deleteAll(List<StockLevel> stockLevels) {
+        log.info("Deleting stock levels {}", stockLevels);
         stockLevelRepository.deleteAll(stockLevels);
     }
 
     public void deleteAll() {
+        log.info("Deleting all stock levels");
         stockLevelRepository.deleteAll();
     }
 
     public StockLevel receipts(StockLevel stock) {
+        log.info("Receiving stock level {}", stock);
         if (stock.getQuantity() <= 0) {
             return null;
         }
@@ -83,6 +93,7 @@ public class StockLevelService {
     }
 
     public boolean adjustments(StockLevelDTO stockLevelDTO) {
+        log.info("Adjusting stock level {}", stockLevelDTO);
         Optional<StockLevel> stockLevel = stockLevelRepository.findByProductIdAndLocationId(stockLevelDTO.getProductId(),
                 stockLevelDTO.getLocationId());
 

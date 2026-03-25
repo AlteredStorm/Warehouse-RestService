@@ -200,6 +200,7 @@ public class OrderService {
         Optional<Order> order = orderRepository.findById(id);
         List<StockLevel> stockLevels = new ArrayList<>();
         List<Movement> movements = new ArrayList<>();
+        
         if (order.isPresent()) {
             String locationId = "loc_STAGE_" + order.get().getId();
             for (Order.OrderItem orderItem : order.get().getItems()) {
@@ -297,7 +298,5 @@ public class OrderService {
         } else {
             return null;
         }
-
-
     }
 }

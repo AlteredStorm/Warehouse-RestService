@@ -1,15 +1,13 @@
 package warehouse.core.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import warehouse.core.document.StockLevel;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class StockLevelDTO {
 
     String productId;

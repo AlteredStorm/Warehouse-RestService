@@ -3,12 +3,14 @@ package warehouse.core.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import warehouse.core.document.Location;
 import warehouse.core.document.enums.LocationTypes;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class LocationDTO {
 
     String code;

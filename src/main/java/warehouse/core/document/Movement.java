@@ -2,6 +2,7 @@ package warehouse.core.document;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import warehouse.core.document.enums.MovementTypes;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Document("Movement")
 @Getter
 @Setter
+@ToString
 public class Movement {
 
     public Movement(String productId, int quantity, String unit, String fromLocationId, String toLocationId,

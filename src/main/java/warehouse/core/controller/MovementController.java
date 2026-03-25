@@ -1,5 +1,6 @@
 package warehouse.core.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/movements")
+@Slf4j
 public class MovementController {
 
     private final MovementService movementService;
@@ -25,6 +27,7 @@ public class MovementController {
 
     @GetMapping
     public ResponseEntity<List<MovementDTO>> getMovements(@RequestParam(required = false) Integer pageSize) {
+        log.info("GET api/movements called");
         ResponseEntity<List<MovementDTO>> responseEntity;
         List<MovementDTO> movementDTOS = movementService.findAll(pageSize);
 
