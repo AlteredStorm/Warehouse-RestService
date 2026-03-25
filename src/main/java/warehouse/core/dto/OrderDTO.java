@@ -2,6 +2,7 @@ package warehouse.core.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import warehouse.core.document.Order;
 import warehouse.core.document.enums.OrderStatus;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderDTO {
 
     String id;
@@ -20,6 +22,7 @@ public class OrderDTO {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class OrderItemDTO {
         String productSku;
         Integer requestedQuantity;

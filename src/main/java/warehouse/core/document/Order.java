@@ -1,9 +1,6 @@
 package warehouse.core.document;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import warehouse.core.document.enums.OrderStatus;
@@ -14,6 +11,7 @@ import java.util.List;
 @Document("Order")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Order {
 
     public Order(String id, List<OrderItem> orderItems) {
@@ -31,6 +29,7 @@ public class Order {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class OrderItem {
         String productSku;
         int requestedQuantity;
