@@ -57,19 +57,13 @@ public class OrderService {
     }
 
     public OrderDTO startPicking(String id) {
-        List<Movement> movements = new ArrayList<>();
-        List<StockLevel> reservedStockLevel = new ArrayList<>();
         Optional<Order> order = orderRepository.findById(id);
-        String description = "Ware für Bestellung ::orderID::";
 
         if (order.isPresent()) {
-            description = description.replace("::orderID::", order.get().getId());
-            Location location = new Location("loc_STAGE_" + order.get().getId(), LocationTypes.STAGE, description);
 
             order.get().startPicking();
             List<Order.OrderItem> orderItems = order.get().getItems();
 
-            // Wichtig: Pick-Mengen sauber zurücksetzen, damit nichts von alten Läufen hängen bleibt
             for (Order.OrderItem item : orderItems) {
                 item.setPickedQuantity(0);
             }
@@ -81,105 +75,7 @@ public class OrderService {
                 Map<String, List<StockLevel>> stockLevelByProductId = stockLevelService.findAllByProductId(productIds);
 
                 if (!stockLevelByProductId.isEmpty()) {
-                    for (Map.Entry<String, List<StockLevel>> entry : stockLevelByProductId.entrySet()) {
-                        String productId = entry.getKey();
-
-                        Optional<Product> product = products.stream()
-                                .filter(productTemp -> productTemp.getSku().equals(productId))
-                                .findFirst();
-
-                        Optional<Order.OrderItem> orderItem = orderItems.stream()
-                                .filter(item -> item.getProductSku().equals(productId))
-                                .findFirst();
-
-                        List<StockLevel> stockLevels = entry.getValue();
-
-                        if (orderItem.isPresent() && product.isPresent()) {
-                            int requestedQuantity = orderItem.get().getRequestedQuantity();
-
-                            Optional<StockLevel> bestSingleMatch = stockLevels.stream()
-                                    .filter(stockLevel -> stockLevel.getQuantity() >= requestedQuantity)
-                                    .min(Comparator.comparingInt(StockLevel::getQuantity));
-
-                            if (bestSingleMatch.isPresent()) {
-                                orderItem.get().setPickedQuantity(requestedQuantity);
-
-                                StockLevel stageStockLevel = new StockLevel(
-                                        productId,
-                                        location.getCode(),
-                                        requestedQuantity
-                                );
-
-                                bestSingleMatch.get().setQuantity(bestSingleMatch.get().getQuantity() - requestedQuantity);
-
-                                reservedStockLevel.add(bestSingleMatch.get());
-                                reservedStockLevel.add(stageStockLevel);
-
-                                Movement movement = new Movement(
-                                        productId,
-                                        requestedQuantity,
-                                        product.get().getUnit(),
-                                        bestSingleMatch.get().getLocationId(),
-                                        location.getCode(),
-                                        MovementTypes.INTERNAL_TRANSFER,
-                                        "Order",
-                                        Instant.now()
-                                );
-                                movements.add(movement);
-                                continue;
-                            }
-
-                            List<StockLevel> sortedStockLevels = stockLevels.stream()
-                                    .filter(stockLevel -> stockLevel.getQuantity() > 0)
-                                    .sorted(Comparator.comparingInt(StockLevel::getQuantity).reversed())
-                                    .toList();
-
-                            int reservedTotal = 0;
-                            StockLevel stageStockLevel = new StockLevel(productId, location.getCode(), 0);
-
-                            for (StockLevel stockLevel : sortedStockLevels) {
-                                if (reservedTotal >= requestedQuantity) {
-                                    break;
-                                }
-
-                                int remaining = requestedQuantity - reservedTotal;
-                                int quantityToTake = Math.min(stockLevel.getQuantity(), remaining);
-
-                                if (quantityToTake > 0) {
-                                    stockLevel.setQuantity(stockLevel.getQuantity() - quantityToTake);
-                                    stageStockLevel.setQuantity(stageStockLevel.getQuantity() + quantityToTake);
-
-                                    reservedStockLevel.add(stockLevel);
-
-                                    Movement movement = new Movement(
-                                            productId,
-                                            quantityToTake,
-                                            product.get().getUnit(),
-                                            stockLevel.getLocationId(),
-                                            location.getCode(),
-                                            MovementTypes.INTERNAL_TRANSFER,
-                                            "Order",
-                                            Instant.now()
-                                    );
-                                    movements.add(movement);
-
-                                    orderItem.get().setPickedQuantity(orderItem.get().getPickedQuantity() + quantityToTake);
-                                    reservedTotal += quantityToTake;
-                                }
-                            }
-
-                            if (stageStockLevel.getQuantity() > 0) {
-                                reservedStockLevel.add(stageStockLevel);
-                            }
-                        }
-                    }
-
-                    order.get().finishPicking();
-                    locationService.save(location);
-                    stockLevelService.saveOrDeleteAll(reservedStockLevel);
-                    movementService.saveAll(movements);
-                    orderRepository.save(order.get());
-                    return order.get().toDTO();
+                    return processPicking(stockLevelByProductId, products, order.get(), orderItems);
                 }
             } else {
                 order.get().cancel();
@@ -187,8 +83,117 @@ public class OrderService {
                 return order.get().toDTO();
             }
         }
-
         return null;
+    }
+
+    private OrderDTO processPicking(Map<String, List<StockLevel>> stockLevelByProductId, List<Product> products,
+                                    Order order, List<Order.OrderItem> orderItems) {
+
+        String description = "Ware für Bestellung ::orderID::";
+        description = description.replace("::orderID::", order.getId());
+        Location location = new Location("loc_STAGE_" + order.getId(), LocationTypes.STAGE, description);
+        List<Movement> movements = new ArrayList<>();
+        List<StockLevel> reservedStockLevel = new ArrayList<>();
+
+        for (Map.Entry<String, List<StockLevel>> entry : stockLevelByProductId.entrySet()) {
+            String productSku = entry.getKey();
+
+            Optional<Product> product = products.stream()
+                    .filter(productTemp -> productTemp.getSku().equals(productSku))
+                    .findFirst();
+
+            Optional<Order.OrderItem> orderItem = orderItems.stream()
+                    .filter(item -> item.getProductSku().equals(productSku))
+                    .findFirst();
+
+            List<StockLevel> stockLevels = entry.getValue();
+
+            if (orderItem.isPresent() && product.isPresent()) {
+                int requestedQuantity = orderItem.get().getRequestedQuantity();
+
+                Optional<StockLevel> bestSingleMatch = stockLevels.stream()
+                        .filter(stockLevel -> stockLevel.getQuantity() >= requestedQuantity)
+                        .min(Comparator.comparingInt(StockLevel::getQuantity));
+
+                if (bestSingleMatch.isPresent()) {
+                    orderItem.get().setPickedQuantity(requestedQuantity);
+
+                    StockLevel stageStockLevel = new StockLevel(
+                            productSku,
+                            location.getCode(),
+                            requestedQuantity
+                    );
+
+                    bestSingleMatch.get().setQuantity(bestSingleMatch.get().getQuantity() - requestedQuantity);
+
+                    reservedStockLevel.add(bestSingleMatch.get());
+                    reservedStockLevel.add(stageStockLevel);
+
+                    Movement movement = new Movement(
+                            productSku,
+                            requestedQuantity,
+                            product.get().getUnit(),
+                            bestSingleMatch.get().getLocationId(),
+                            location.getCode(),
+                            MovementTypes.INTERNAL_TRANSFER,
+                            "Order",
+                            Instant.now()
+                    );
+                    movements.add(movement);
+                    continue;
+                }
+
+                List<StockLevel> sortedStockLevels = stockLevels.stream()
+                        .filter(stockLevel -> stockLevel.getQuantity() > 0)
+                        .sorted(Comparator.comparingInt(StockLevel::getQuantity).reversed())
+                        .toList();
+
+                int reservedTotal = 0;
+                StockLevel stageStockLevel = new StockLevel(productSku, location.getCode(), 0);
+
+                for (StockLevel stockLevel : sortedStockLevels) {
+                    if (reservedTotal >= requestedQuantity) {
+                        break;
+                    }
+
+                    int remaining = requestedQuantity - reservedTotal;
+                    int quantityToTake = Math.min(stockLevel.getQuantity(), remaining);
+
+                    if (quantityToTake > 0) {
+                        stockLevel.setQuantity(stockLevel.getQuantity() - quantityToTake);
+                        stageStockLevel.setQuantity(stageStockLevel.getQuantity() + quantityToTake);
+
+                        reservedStockLevel.add(stockLevel);
+
+                        Movement movement = new Movement(
+                                productSku,
+                                quantityToTake,
+                                product.get().getUnit(),
+                                stockLevel.getLocationId(),
+                                location.getCode(),
+                                MovementTypes.INTERNAL_TRANSFER,
+                                "Order",
+                                Instant.now()
+                        );
+                        movements.add(movement);
+
+                        orderItem.get().setPickedQuantity(orderItem.get().getPickedQuantity() + quantityToTake);
+                        reservedTotal += quantityToTake;
+                    }
+                }
+
+                if (stageStockLevel.getQuantity() > 0) {
+                    reservedStockLevel.add(stageStockLevel);
+                }
+            }
+        }
+
+        order.finishPicking();
+        locationService.save(location);
+        stockLevelService.saveOrDeleteAll(reservedStockLevel);
+        movementService.saveAll(movements);
+        orderRepository.save(order);
+        return order.toDTO();
     }
 
     public OrderDTO ship(String id) {
