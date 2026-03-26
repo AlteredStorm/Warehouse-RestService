@@ -29,7 +29,7 @@ public class StockLevelController {
         return new ResponseEntity<>(stockLevelService.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping("/receipts")
+    @PostMapping("/level")
     public ResponseEntity<StockLevelDTO> postStockReceipts(@RequestBody StockLevelDTO stockLevelDTO) {
         log.info("GET api/stock/receipts called with DTO {}", stockLevelDTO.toString());
         StockLevel stockLevel = stockLevelService.receipts(stockLevelDTO.toStock());
@@ -40,7 +40,7 @@ public class StockLevelController {
         }
     }
 
-    @PostMapping("/adjustments")
+    @PostMapping("/adjustment")
     public ResponseEntity<String> postStockAdjustments(@RequestBody StockLevelDTO stockLevelDTO) {
         log.info("GET api/stock/adjustments called with DTO {}", stockLevelDTO.toString());
         if (stockLevelService.adjustments(stockLevelDTO)) {
