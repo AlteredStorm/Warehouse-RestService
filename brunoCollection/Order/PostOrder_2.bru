@@ -1,0 +1,36 @@
+meta {
+  name: PostOrder_2
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/orders
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": "Order_002",
+    "items" : [
+    {
+      "productSku": "APP-TSH-002",
+      "requestedQuantity": 10,
+      "pickedQuantity": 0
+    }, {
+      "productSku": "ELE-HEA-001",
+      "requestedQuantity": 5,
+      "pickedQuantity": 0
+    }, {
+      "productSku": "APP-JEA-001",
+      "requestedQuantity": 8,
+      "pickedQuantity": 0
+    }]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

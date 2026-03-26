@@ -76,7 +76,7 @@ public class OrderService {
         List<String> productIds = orderItems.stream().map(Order.OrderItem::getProductSku).toList();
         List<Product> products = productService.findAllById(productIds);
 
-        if (!products.isEmpty()) {
+        if (products.isEmpty()) {
             log.info("No products found for order {}", order.getId());
             order.cancel();
             orderRepository.save(order);
@@ -298,8 +298,8 @@ public class OrderService {
                 return null;
             }
 
-            product = (Product) response.get(0);
-            orderItem = (Order.OrderItem) response.get(1);
+            orderItem = (Order.OrderItem) response.get(0);
+            product = (Product) response.get(1);
 
             log.info("Sorting stock levels by quantity in descending order");
             stockLevels = entry.getValue();
@@ -370,8 +370,8 @@ public class OrderService {
                 return null;
             }
 
-            product = (Product) response.get(0);
-            orderItem = (Order.OrderItem) response.get(1);
+            orderItem = (Order.OrderItem) response.get(0);
+            product = (Product) response.get(1);
 
             stockLevel = new StockLevel(entry.getKey(), locationCode, orderItem.getPickedQuantity());
             reservedStockLevels.add(stockLevel);

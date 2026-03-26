@@ -1,0 +1,16 @@
+meta {
+  name: PostReturnOrder
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://localhost:8080/api/orders/return/Order_001
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

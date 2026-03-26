@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Warehouse RestService",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
