@@ -312,7 +312,7 @@ public class OrderService {
                     .sorted(Comparator.comparingInt(StockLevel::getQuantity).reversed())
                     .toList();
             if (!sortedStockLevels.isEmpty()) {
-                StockLevel stockLevel = sortedStockLevels.getFirst();
+                StockLevel stockLevel = sortedStockLevels.get(0);
                 stockLevel.setQuantity(stockLevel.getQuantity() + orderItem.getPickedQuantity());
                 reservedStockLevels.add(stockLevel);
 
