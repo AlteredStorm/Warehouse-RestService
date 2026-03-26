@@ -32,7 +32,7 @@ public class StockLevelController {
     @PostMapping("/level")
     public ResponseEntity<StockLevelDTO> postStockReceipts(@RequestBody StockLevelDTO stockLevelDTO) {
         log.info("GET api/stock/receipts called with DTO {}", stockLevelDTO.toString());
-        StockLevel stockLevel = stockLevelService.receipts(stockLevelDTO.toStock());
+        StockLevel stockLevel = stockLevelService.save(stockLevelDTO.toStock());
         if (stockLevel != null) {
             return  new ResponseEntity<>(HttpStatus.OK);
         } else  {

@@ -72,7 +72,7 @@ public class StockLevelService {
         stockLevelRepository.deleteAll();
     }
 
-    public StockLevel receipts(StockLevel stock) {
+    public StockLevel save(StockLevel stock) {
         log.info("Receiving stock level {}", stock);
         if (stock.getQuantity() <= 0) {
             return null;
