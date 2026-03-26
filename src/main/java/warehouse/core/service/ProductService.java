@@ -32,18 +32,18 @@ public class ProductService {
     }
 
     public List<ProductDTO> findAll() {
-        log.info("Finding all products information");
+        log.info("Retrieving all products information");
         List<Product> products = productRepository.findAll();
         return products.stream().map(Product::toDTO).toList();
     }
 
     public List<Product> findAllById(List<String> ids) {
-        log.info("Finding all products information specified by ids: {}", ids);
+        log.info("Retrieving all products information specified by ids: {}", ids);
         return productRepository.findAllById(ids);
     }
 
     public Optional<Product> findById(String id) {
-        log.info("Finding product information by Id {}", id);
+        log.info("Retrieving product information by Id {}", id);
         return productRepository.findById(id);
     }
 

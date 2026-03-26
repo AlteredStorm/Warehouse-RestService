@@ -35,11 +35,13 @@ public class OrderService {
     }
 
     public List<OrderDTO> findAll() {
+        log.info("Retrieving all orders");
         List<Order> order = orderRepository.findAll();
         return order.stream().map(Order::toDTO).toList();
     }
 
     public OrderDTO findById(String id) {
+        log.info("Retrieving order by id {}", id);
         Order order = orderRepository.findById(id).orElse(null);
         if  (order == null) {
             return null;
@@ -49,16 +51,19 @@ public class OrderService {
     }
 
     public void save(OrderDTO orderDTO) {
+        log.info("Saving order {}", orderDTO);
         Order order = orderDTO.toOrder();
         order.created();
         orderRepository.save(order);
     }
 
     public void deleteAll() {
+        log.info("Deleting all orders");
         orderRepository.deleteAll();
     }
 
     public OrderDTO startPicking(String id) {
+        log.info("Picking process started for order {}", id);
         Order order = findOrder(id);
 
         if (order == null) {

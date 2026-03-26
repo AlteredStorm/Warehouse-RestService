@@ -24,13 +24,13 @@ public class StockLevelService {
     }
 
     public List<StockLevelDTO> findAll() {
-        log.info("Finding all stock levels");
+        log.info("Retrieving all stock levels");
         List<StockLevel> stockLevelList = stockLevelRepository.findAll();
         return stockLevelList.stream().map(StockLevel::toDTO).toList();
     }
 
     public Map<String, List<StockLevel>> findAllByProductId(List<String> productIds) {
-        log.info("Finding all stock levels by product id");
+        log.info("Retrieving all stock levels by product id");
         Map<String, List<StockLevel>> stockLevelMapByProduct = new HashMap<>();
         List<StockLevel> stockLevels = stockLevelRepository.findAllByProductIdIn(productIds);
         for (String productId : productIds) {
@@ -42,7 +42,7 @@ public class StockLevelService {
     }
 
     public Optional<StockLevel> findByProductIdAndLocationId(String productId, String locationId) {
-        log.info("Finding stock levels by product and location id");
+        log.info("Retrieving stock levels by product id and location id");
         return stockLevelRepository.findByProductIdAndLocationId(productId, locationId);
     }
 
